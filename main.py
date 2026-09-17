@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import uvicorn
 
 #aplicación FastAPI
-app = FastAPI(title="API funcionando creador por Sir_JosueRB") 
+app = FastAPI(title="API funcionando creado por Sir_JosueRB") 
 
 
 class Usuario(BaseModel): # Modelo para representar un usuario
@@ -24,7 +24,7 @@ contador_libros = 1
 
 @app.get("/") # Ruta para la página de inicio
 def inicio():
-    return {"mensaje": "API funcionando correctamente creador por Sir_JosueRB."} 
+    return {"mensaje": "API funcionando correctamente creado por Sir_JosueRB."} 
 
 
 @app.post("/usuarios/") # Ruta para crear un nuevo usuario
@@ -47,6 +47,15 @@ def listar_usuarios():
 def obtener_usuario(usuario_id: int):
     for usuario in usuarios:
         if usuario["id"] == usuario_id:
+            return usuario
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+@app.put("/usuarios/{usuario_id}") # Ruta para actualizar un usuario
+def actualizar_usuario(usuario_id: int, datos: Usuario):
+    for usuario in usuarios:
+        if usuario["id"] == usuario_id:
+            usuario["nombre"] = datos.nombre
+            usuario["email"] = datos.email
             return usuario
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
@@ -81,6 +90,15 @@ def obtener_libro(libro_id: int):
             return libro
     raise HTTPException(status_code=404, detail="Libro no encontrado")
 
+@app.put("/libros/{libro_id}") # Ruta para actualizar un libro
+def actualizar_libro(libro_id: int, datos: Libro):
+    for libro in libros:
+        if libro["id"] == libro_id:
+            libro["titulo"] = datos.titulo
+            libro["autor"] = datos.autor
+            return libro
+    raise HTTPException(status_code=404, detail="Libro no encontrado")
+
 
 @app.delete("/libros/{libro_id}") # Ruta para eliminar un libro por su ID
 def eliminar_libro(libro_id: int):
@@ -91,5 +109,5 @@ def eliminar_libro(libro_id: int):
     raise HTTPException(status_code=404, detail="Libro no encontrado")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     uvicorn.run(app, host="0.0.0.0", port=8000)
